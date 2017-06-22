@@ -29,7 +29,7 @@
     "browser-test-firefox": "npm run jshint && CLIENT=selenium:firefox npm run browser-test",
     "browser-test-chrome": "npm run jshint && CLIENT=selenium:chrome npm run browser-test",
     "browser-test-phantomjs": "npm run jshint && CLIENT=selenium:phantomjs npm run browser-test",
-    "browser-coverage-server": "./scripts/browser-coverage/server.js -c ./example/cache -t ./example/tests.js",
+    "browser-coverage-server": "./scripts/browser-coverage/serve.js -c ./example/cache -t ./example/tests.js",
     "browser-coverage-test": "./test/browser-coverage/test.js",
     "browser-coverage-report": "istanbul report --dir coverage/browser --root coverage/browser lcov",
     "browser-coverage-check": "istanbul check-coverage --lines 100 --function 100 --statements 100 --branches 100 coverage/browser/coverage.json",
