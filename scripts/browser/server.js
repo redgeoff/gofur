@@ -14,7 +14,7 @@ if (!argv.c || !argv.t) {
 
 var HTTP_PORT = argv.p ? argv.p : 8001;
 
-var cacheDir = argv.c;
+var htmlDir = path.join(argv.c, 'browser');
 
 var http = require('http');
 var express = require('express');
@@ -23,15 +23,10 @@ var app = express();
 var utils = require('../utils');
 var fs = require('fs');
 var indexfile = argv.t;
-var dotfile = argv.c + '/.bundle.js';
-var outfile = argv.c + '/bundle.js';
-var watchify = require('watchify');
+var dotFile = htmlDir + '/.bundle.js';
+var outFile = htmlDir + '/bundle.js';
 var browserify = require('browserify');
-
-// TODO: make this configurable via an env var
-// Watchify appears to occasionally cause "Error: watch ENOSPC" errors in saucelabs so we'll just
-// disable it.
-var useWatchify = false;
+var mkdirp = require('mkdirp-promise');
 
 var b = browserify(indexfile, {
   cache: {},
@@ -40,80 +35,33 @@ var b = browserify(indexfile, {
   debug: true
 });
 
-var filesWritten = false;
-var serverStarted = false;
-var readyCallback;
-
-function bundle() {
-  var wb = (useWatchify ? w.bundle() : b.bundle());
-  wb.on('error', function (err) {
-    console.error(String(err));
-  });
-  wb.on('end', end);
-  wb.pipe(fs.createWriteStream(dotfile));
-
-  function end() {
-    fs.rename(dotfile, outfile, function (err) {
-      if (err) {
-        return console.error(err);
-      }
-      console.log('Updated:', outfile);
-      filesWritten = true;
-      checkReady();
-    });
+var files = [{
+    src: path.join(__dirname, 'index.html'),
+    dst: path.join(htmlDir, 'index.html')
+  },
+  {
+    src: path.join(__dirname, 'webrunner.js'),
+    dst: path.join(htmlDir, 'webrunner.js')
+  },
+  {
+    src: path.join(__dirname, '../../node_modules/mocha/mocha.css'),
+    dst: path.join(htmlDir, 'mocha.css')
+  },
+  {
+    src: path.join(__dirname, '../../node_modules/mocha/mocha.js'),
+    dst: path.join(htmlDir, 'mocha.js')
   }
-}
+];
 
-if (useWatchify) {
-  var w = watchify(b);
-  w.on('update', bundle);
-}
-
-bundle();
-
-var copyFiles = function () {
-  return utils.copyFiles([{
-      src: path.join(__dirname, 'index.html'),
-      dst: path.join(cacheDir, 'index.html')
-    },
-    {
-      src: path.join(__dirname, 'webrunner.js'),
-      dst: path.join(cacheDir, 'webrunner.js')
-    },
-    {
-      src: path.join(__dirname, '../../node_modules/mocha/mocha.css'),
-      dst: path.join(cacheDir, 'mocha.css')
-    },
-    {
-      src: path.join(__dirname, '../../node_modules/mocha/mocha.js'),
-      dst: path.join(cacheDir, 'mocha.js')
-    }
-  ]);
-};
-
-function startServers(callback) {
-  readyCallback = callback;
-
+mkdirp(htmlDir).then(function () {
   // We need to copy files to the cache so that we can expose a single directory to our web server
-  return copyFiles().then(function () {
-    app.use(express.static(cacheDir));
-    var server = http.createServer(app);
-    server.listen(HTTP_PORT, function () {
-      console.log('Tests: http://127.0.0.1:' + HTTP_PORT + '/index.html');
-      serverStarted = true;
-      checkReady();
-    });
+  return utils.copyFiles(files);
+}).then(function () {
+  return utils.concat(b, dotFile, outFile);
+}).then(function () {
+  app.use(express.static(argv.c));
+  var server = http.createServer(app);
+  server.listen(HTTP_PORT, function () {
+    console.log('Tests: http://127.0.0.1:' + HTTP_PORT + '/browser/index.html');
   });
-}
-
-function checkReady() {
-  if (filesWritten && serverStarted && readyCallback) {
-    readyCallback();
-  }
-}
-
-if (require.main === module) {
-  startServers();
-} else {
-  module.exports.start = startServers;
-}
+});

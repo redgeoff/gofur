@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 // TODO: refactor into OOP and bin layer
+// TODO: should be able to reuse a lot of logic between browser and browser-coverage
 
 'use strict';
 
@@ -22,10 +23,10 @@ if (!argv.c || !argv.t) {
 }
 
 var HTTP_PORT = argv.p ? argv.p : 8001;
-var cacheDir = path.join(argv.c, 'browser-coverage');
+var htmlDir = path.join(argv.c, 'browser-coverage');
 var indexfile = argv.t;
-var dotFile = cacheDir + '/.bundle.js';
-var outFile = cacheDir + '/bundle.js';
+var dotFile = htmlDir + '/.bundle.js';
+var outFile = htmlDir + '/bundle.js';
 var app = express();
 var utils = require('../utils');
 
@@ -42,29 +43,31 @@ b.transform(istanbul({
 
 var files = [{
     src: path.join(__dirname, 'index.html'),
-    dst: path.join(cacheDir, 'index.html')
+    dst: path.join(htmlDir, 'index.html')
   },
   {
     src: path.join(__dirname, '../../node_modules/mocha/mocha.css'),
-    dst: path.join(cacheDir, 'mocha.css')
+    dst: path.join(htmlDir, 'mocha.css')
   },
   {
     src: path.join(__dirname, '../../node_modules/mocha/mocha.js'),
-    dst: path.join(cacheDir, 'mocha.js')
+    dst: path.join(htmlDir, 'mocha.js')
   },
   {
     src: path.join(__dirname, '../../node_modules/chai/chai.js'),
-    dst: path.join(cacheDir, 'mocha.js')
+    dst: path.join(htmlDir, 'mocha.js')
   }
 ];
 
-mkdirp(cacheDir).then(function () {
+mkdirp(htmlDir).then(function () {
   // We need to copy files to the cache so that we can expose a single directory to our web server
   return utils.copyFiles(files);
 }).then(function () {
   return utils.concat(b, dotFile, outFile);
 }).then(function () {
-  app.use(express.static(cacheDir));
+  app.use(express.static(argv.c));
   var server = http.createServer(app);
-  server.listen(HTTP_PORT);
+  server.listen(HTTP_PORT, function () {
+    console.log('Tests: http://127.0.0.1:' + HTTP_PORT + '/browser-coverage/index.html');
+  });
 });
