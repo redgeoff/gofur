@@ -30,4 +30,30 @@ Utils.prototype.copyFiles = function (files) {
   return Promise.all(promises);
 };
 
+// TODO: also use in browser/server
+Utils.prototype.concat = function (b, dotFile, outFile) {
+  return new Promise(function (resolve, reject) {
+    var bun = b.bundle();
+
+    bun.on('error', function (err) {
+      reject(err);
+    });
+
+    bun.on('end', end);
+
+    bun.pipe(fs.createWriteStream(dotFile));
+
+    function end() {
+      fs.rename(dotFile, outFile, function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          console.log('Updated:', outFile);
+          resolve(outFile);
+        }
+      });
+    }
+  });
+};
+
 module.exports = new Utils();
