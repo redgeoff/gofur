@@ -55,7 +55,7 @@ var files = [{
   },
   {
     src: path.join(__dirname, '../../node_modules/chai/chai.js'),
-    dst: path.join(htmlDir, 'mocha.js')
+    dst: path.join(htmlDir, 'chai.js')
   }
 ];
 
