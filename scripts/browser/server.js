@@ -20,6 +20,7 @@ var http = require('http');
 var express = require('express');
 var app = express();
 
+var utils = require('../utils');
 var fs = require('fs');
 var indexfile = argv.t;
 var dotfile = argv.c + '/.bundle.js';
@@ -70,36 +71,24 @@ if (useWatchify) {
 
 bundle();
 
-var copyFile = function (srcPath, dstPath) {
-  return new Promise(function (resolve, reject) {
-    var rs = fs.createReadStream(srcPath);
-    rs.on('error', reject);
-
-    var ws = fs.createWriteStream(dstPath);
-    ws.on('error', reject);
-
-    rs.pipe(ws);
-
-    ws.on('finish', resolve);
-  });
-};
-
 var copyFiles = function () {
-  var promises = [];
-
-  var files = [
-    { src: path.join(__dirname, 'index.html'), dst: path.join(cacheDir, 'index.html') },
-    { src: path.join(__dirname, 'webrunner.js'), dst: path.join(cacheDir, 'webrunner.js') },
-    { src: path.join(__dirname, '../../node_modules/mocha/mocha.css'), dst: path.join(cacheDir, 'mocha.css') },
-    { src: path.join(__dirname, '../../node_modules/mocha/mocha.js'), dst: path.join(cacheDir, 'mocha.js') },
-    { src: path.join(__dirname, '../../node_modules/es5-shim/es5-shim.js'), dst: path.join(cacheDir, 'es5-shim.js') }
-  ];
-
-  files.forEach(function (file) {
-    promises.push(copyFile(file.src, file.dst));
-  });
-
-  return Promise.all(promises);
+  return utils.copyFiles([{
+      src: path.join(__dirname, 'index.html'),
+      dst: path.join(cacheDir, 'index.html')
+    },
+    {
+      src: path.join(__dirname, 'webrunner.js'),
+      dst: path.join(cacheDir, 'webrunner.js')
+    },
+    {
+      src: path.join(__dirname, '../../node_modules/mocha/mocha.css'),
+      dst: path.join(cacheDir, 'mocha.css')
+    },
+    {
+      src: path.join(__dirname, '../../node_modules/mocha/mocha.js'),
+      dst: path.join(cacheDir, 'mocha.js')
+    }
+  ]);
 };
 
 function startServers(callback) {
@@ -109,7 +98,7 @@ function startServers(callback) {
   return copyFiles().then(function () {
     app.use(express.static(cacheDir));
     var server = http.createServer(app);
-    server.listen(HTTP_PORT, function() {
+    server.listen(HTTP_PORT, function () {
       console.log('Tests: http://127.0.0.1:' + HTTP_PORT + '/index.html');
       serverStarted = true;
       checkReady();

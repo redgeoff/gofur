@@ -1,6 +1,5 @@
 'use strict';
 
-// TODO: move to browser-tester
 var chai = require('chai');
 chai.use(require('chai-as-promised'));
 chai.should();
