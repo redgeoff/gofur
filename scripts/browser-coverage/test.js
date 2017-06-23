@@ -45,7 +45,8 @@ var runTests = function () {
 
   // Unless we have mocha-phantomjs installed globally we have to specify the full path
   // var child = spawn('mocha-phantomjs', options);
-  var child = spawn(path.join(__dirname, '../../node_modules/mocha-phantomjs/bin/mocha-phantomjs'), options);
+  var child = spawn(path.join(__dirname, '../../node_modules/mocha-phantomjs/bin/mocha-phantomjs'),
+    options);
 
   child.stdout.on('data', function (data) {
     console.log(data.toString()); // echo output, including what could be errors
