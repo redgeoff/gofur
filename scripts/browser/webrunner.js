@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  'use strict';
   var runner = mocha.run();
   window.results = {
     lastPassed: '',

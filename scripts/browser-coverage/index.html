@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>Tests Reporter Output to File</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="mocha.css" />
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script src="mocha.js"></script>
+    <script src="chai.js"></script>
+    <script src="config.js"></script>
+    <script>
+      mocha.ui('bdd');
+      expect = chai.expect;
+    </script>
+    <script src="bundle.js"></script>
+    <script>
+      mocha.run();
+    </script>
+  </body>
+</html>

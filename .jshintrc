@@ -26,6 +26,7 @@
     "after": false,
     "afterEach": false,
     "it": false,
-    "emit": false
+    "emit": false,
+    "mocha": false
   }
 }
