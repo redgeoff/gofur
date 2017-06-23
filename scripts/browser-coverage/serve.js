@@ -6,7 +6,7 @@ var argv = require('minimist')(process.argv.slice(2)),
   Server = require('./server');
 
 if (!argv.c || !argv.t) {
-  console.log('Usage: concat -c cache-dir -t test-js-file [ -p port ]');
+  console.log('Usage: serve -c cache-dir -t test-js-file [ -p port ]');
   process.exit(1);
 }
 

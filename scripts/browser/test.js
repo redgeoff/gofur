@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
-// TODO: after refactor browser/server then get this working
+// TODO:
+// - Refactor code into separate Tester class and then use here
+// - Make sure the sauce labs flow is working
+// - wd and other libs below now support promises so let's use them!
 
 'use strict';
 
@@ -10,7 +13,15 @@ var selenium = require('selenium-standalone');
 var querystring = require('querystring');
 var SauceResultsUpdater = require('./sauce-results-updater');
 
-var server = require('./server.js');
+var argv = require('minimist')(process.argv.slice(2)),
+  Server = require('./server');
+
+if (!argv.c || !argv.t) {
+  console.log('Usage: test -c cache-dir -t test-js-file [ -p port ]');
+  process.exit(1);
+}
+
+var server = new Server(argv.c, argv.t, argv.p);
 
 var testTimeout = 30 * 60 * 1000;
 
@@ -34,7 +45,7 @@ var client = {
   platform: tmp[3] || null
 };
 
-var testUrl = 'http://127.0.0.1:8001/index.html';
+var testURL = 'http://127.0.0.1:' + server._port + '/browser/index.html';
 var qs = {};
 
 var sauceClient;
@@ -51,8 +62,9 @@ if (client.runner === 'saucelabs') {
 if (process.env.GREP) {
   qs.grep = process.env.GREP;
 }
-testUrl += '?';
-testUrl += querystring.stringify(qs);
+
+testURL += '?';
+testURL += querystring.stringify(qs);
 
 function testError(e) {
   console.error(e);
@@ -87,7 +99,8 @@ function testComplete(result) {
 function startSelenium(callback) {
   // Start selenium
   var opts = {
-    version: '2.45.0'
+    // TODO: remove?
+    // version: '2.45.0'
   };
   selenium.install(opts, function (err) {
     if (err) {
@@ -147,7 +160,7 @@ function startTest() {
     'tunnel-identifier': tunnelId
   };
 
-  sauceClient.init(opts).get(testUrl, function () {
+  sauceClient.init(opts).get(testURL).then(function () {
 
     /* jshint evil: true */
     var interval = setInterval(function () {
@@ -169,10 +182,13 @@ function startTest() {
   });
 }
 
-server.start(function () {
+server.serve().then(function () {
   if (client.runner === 'saucelabs') {
     startSauceConnect(startTest);
   } else {
     startSelenium(startTest);
   }
+}).catch(function (err) {
+  console.error(err);
+  process.exit(1);
 });
