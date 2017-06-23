@@ -1,56 +1,24 @@
-// TODO: should be able to reuse a lot of logic between browser and browser-coverage
-// TODO: move up a dir and generalize
-
 'use strict';
 
-var path = require('path'),
-  istanbul = require('browserify-istanbul'),
-  mkdirp = require('mkdirp-promise'),
-  utils = require('../utils'),
-  browserify = require('browserify'),
-  http = require('http'),
-  express = require('express'),
-  Promise = require('bluebird');
+var BaseServer = require('../server'),
+  inherits = require('inherits'),
+  path = require('path'),
+  istanbul = require('browserify-istanbul');
 
-var Server = function (cacheDir, testJsFile, port) {
-  this._cacheDir = cacheDir;
-  this._testJsFile = testJsFile;
-  this._port = port ? port : Server.DEFAULT_PORT;
-
-  this._app = express();
-  this._htmlDir = path.join(this._cacheDir, 'browser-coverage');
-  this._dotFile = this._htmlDir + '/.bundle.js';
-  this._outFile = this._htmlDir + '/bundle.js';
+var Server = function () {
+  BaseServer.apply(this, arguments);
 };
 
-Server.DEFAULT_PORT = 8001;
+Server.prototype._name = 'browser-coverage';
 
-Server.prototype._concat = function () {
-  this._b = browserify(this._testJsFile, {
-    cache: {},
-    packageCache: {},
-    fullPaths: true,
-    debug: true
-  });
-
+Server.prototype._transform = function () {
   this._b.transform(istanbul({
     ignore: ['**/node_modules/**']
   }));
-
-  return utils.concat(this._b, this._dotFile, this._outFile);
 };
 
-Server.prototype._writeConfig = function (config) {
-  // Provide the location of the cacheDir to phantom-hooks. TODO: is there a cleaner way?
-  return utils.writeFile(path.join(this._htmlDir, 'config.js'), 'window.gofurConfig=' +
-    JSON.stringify(config));
-};
-
-Server.prototype._copyFiles = function () {
-
-  // We need to copy files to the cache so that we can expose a single directory to our web server
-
-  return utils.copyFiles([{
+Server.prototype._filesToCopy = function () {
+  return [{
       src: path.join(__dirname, 'index.html'),
       dst: path.join(this._htmlDir, 'index.html')
     },
@@ -66,47 +34,9 @@ Server.prototype._copyFiles = function () {
       src: path.join(__dirname, '../../node_modules/chai/chai.js'),
       dst: path.join(this._htmlDir, 'chai.js')
     }
-  ]);
-
+  ];
 };
 
-Server.prototype._createHTMLDir = function () {
-  return mkdirp(this._htmlDir);
-};
-
-Server.prototype._createServer = function () {
-  this._app.use(express.static(this._cacheDir));
-  this._server = http.createServer(this._app);
-};
-
-Server.prototype._listen = function () {
-  var self = this;
-  return new Promise(function (resolve) {
-    self._server.listen(self._port, resolve);
-  });
-};
-
-Server.prototype._createServerAndListen = function () {
-  this._createServer();
-  return this._listen();
-};
-
-Server.prototype.serve = function () {
-  var self = this;
-
-  return self._createHTMLDir().then(function () {
-    return self._copyFiles();
-  }).then(function () {
-    return self._writeConfig({
-      cacheDir: self._cacheDir
-    });
-  }).then(function () {
-    return self._concat();
-  }).then(function () {
-    return self._createServerAndListen();
-  }).then(function () {
-    console.log('Tests: http://127.0.0.1:' + self._port + '/browser-coverage/index.html');
-  });
-};
+inherits(Server, BaseServer);
 
 module.exports = Server;
