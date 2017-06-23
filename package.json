@@ -1,6 +1,6 @@
 {
   "name": "gofur",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Utils for running JS tests in the browser",
   "main": "index.js",
   "repository": {
@@ -23,27 +23,27 @@
     "TODO-test": ""
   },
   "dependencies": {
-    "express": "^4.15.3",
-    "inherits": "^2.0.3",
-    "minimist": "^1.2.0",
-    "mkdirp-promise": "^5.0.1",
-    "phantomjs-prebuilt": "^2.1.14"
-  },
-  "devDependencies": {
-    "beautify-proj": "^1.0.0",
     "bluebird": "^3.5.0",
     "browserify": "^14.4.0",
     "browserify-istanbul": "^2.0.0",
     "chai": "^4.0.2",
     "chai-as-promised": "^6.0.0",
+    "express": "^4.15.3",
+    "inherits": "^2.0.3",
     "istanbul": "^0.4.5",
-    "jshint": "^2.9.4",
+    "minimist": "^1.2.0",
+    "mkdirp-promise": "^5.0.1",
     "mocha": "^3.4.2",
     "mocha-phantomjs": "^4.1.0",
+    "phantomjs-prebuilt": "^2.1.14",
     "request": "^2.81.0",
     "sauce-connect-launcher": "^1.2.2",
     "saucelabs": "^1.4.0",
     "selenium-standalone": "^6.5.0",
     "wd": "^1.2.0"
+  },
+  "devDependencies": {
+    "beautify-proj": "^1.0.0",
+    "jshint": "^2.9.4"
   }
 }
