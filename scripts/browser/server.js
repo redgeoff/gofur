@@ -21,7 +21,6 @@ var express = require('express');
 var app = express();
 
 var utils = require('../utils');
-var fs = require('fs');
 var indexfile = argv.t;
 var dotFile = htmlDir + '/.bundle.js';
 var outFile = htmlDir + '/bundle.js';

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// TODO: after refactor browser/server then get this working
+
 'use strict';
 
 var wd = require('wd');

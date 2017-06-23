@@ -3,7 +3,9 @@
 var fs = require('fs'),
   Promise = require('bluebird');
 
-var Utils = function () {};
+var Utils = function () {
+  this._writeFile = Promise.promisify(fs.writeFile);
+};
 
 Utils.prototype.copyFile = function (srcPath, dstPath) {
   return new Promise(function (resolve, reject) {
@@ -54,6 +56,10 @@ Utils.prototype.concat = function (b, dotFile, outFile) {
       });
     }
   });
+};
+
+Utils.prototype.writeFile = function (file, data) {
+  return this._writeFile(file, data);
 };
 
 module.exports = new Utils();

@@ -7,12 +7,12 @@ var argv = require('minimist')(process.argv.slice(2)),
 
 if (!argv.c || !argv.t) {
   console.log('Usage: concat -c cache-dir -t test-js-file [ -p port ]');
-  process.exit(-1);
+  process.exit(1);
 }
 
 var server = new Server(argv.c, argv.t, argv.p);
 
 server.serve().catch(function (err) {
   console.error(err);
-  process.exit(-1);
+  process.exit(1);
 });

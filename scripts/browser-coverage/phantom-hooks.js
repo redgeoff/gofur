@@ -1,15 +1,22 @@
 'use strict';
 
+var fs = require('fs');
+
 module.exports = {
   afterEnd: function (runner) {
-    var fs = require('fs');
     var coverage = runner.page.evaluate(function () {
       return window.__coverage__;
     });
 
+    // We need the cacheDir to come from the runner. TODO: is there a cleaner way?
+    var gofurConfig = runner.page.evaluate(function () {
+      return window.gofurConfig;
+    });
+
     if (coverage) {
-      console.log('Writing coverage to coverage/browser/coverage.json');
-      fs.write('coverage/browser/coverage.json', JSON.stringify(coverage), 'w');
+      var cacheDir = gofurConfig.cacheDir;
+      console.log('Writing coverage to ' + cacheDir + '/coverage/browser/coverage.json');
+      fs.write(cacheDir + '/coverage/browser/coverage.json', JSON.stringify(coverage), 'w');
     } else {
       console.log('No coverage data generated');
     }

@@ -26,3 +26,7 @@ Utils for running JS tests in the browser
 ## TODO: Debugging Tests Using Node Inspector
 
 ## TODO: Run Saucelabs Tests In a Specific Browser
+
+## Notes
+
+As per https://github.com/domenic/chai-as-promised/releases/tag/v7.0.0, chai-as-promised 7 isn't supported by PhantomJS 2.1.14. Hopefully a later version of PhantomJS will support it or we'll need to transpile chais-as-promised
