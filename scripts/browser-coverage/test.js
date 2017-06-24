@@ -13,7 +13,7 @@ if (!argv.c || !argv.t) {
 
 var server = new Server(argv.c, argv.t, argv.p);
 
-var runTests = function () {
+var runTests = function (modulesDir) {
   // // Uncomment for debugging
   // (function() {
   //   var childProcess = require('child_process');
@@ -35,7 +35,7 @@ var runTests = function () {
     '--hooks', path.join(__dirname, 'phantom-hooks.js'),
 
     // Use a more recent version of phantomjs than that packaged with mocha-phantomjs
-    '-p', path.join(__dirname, '../../node_modules/phantomjs-prebuilt/bin/phantomjs')
+    '-p', path.join(modulesDir, 'phantomjs-prebuilt/bin/phantomjs')
   ];
 
   if (process.env.GREP) {
@@ -45,7 +45,7 @@ var runTests = function () {
 
   // Unless we have mocha-phantomjs installed globally we have to specify the full path
   // var child = spawn('mocha-phantomjs', options);
-  var child = spawn(path.join(__dirname, '../../node_modules/mocha-phantomjs/bin/mocha-phantomjs'),
+  var child = spawn(path.join(modulesDir, 'mocha-phantomjs/bin/mocha-phantomjs'),
     options);
 
   child.stdout.on('data', function (data) {
@@ -67,7 +67,9 @@ var runTests = function () {
 };
 
 server.serve().then(function () {
-  runTests();
+  return server.modulesDir();
+}).then(function (modulesDir) {
+  runTests(modulesDir);
 }).catch(function (err) {
   console.error(err);
   process.exit(1);

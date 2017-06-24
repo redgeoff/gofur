@@ -42,19 +42,22 @@ Server.prototype._writeConfig = function (config) {
     JSON.stringify(config));
 };
 
-// We need to copy files to the cache so that we can expose a single directory to our web server
-Server.prototype._copyFiles = function () {
-  var self = this;
+Server.prototype.modulesDir = function () {
   return utils.fileExists(path.join(__dirname, '../node_modules')).then(function (exists) {
     // Is this script being run from another node module? If so, then adjust the path to the
     // modules
-    var modulesDir = null;
     if (exists) {
-      modulesDir = path.join(__dirname, '../node_modules');
+      return path.join(__dirname, '../node_modules');
     } else {
-      modulesDir = path.join(__dirname, '../..');
+      return path.join(__dirname, '../..');
     }
+  });
+};
 
+// We need to copy files to the cache so that we can expose a single directory to our web server
+Server.prototype._copyFiles = function () {
+  var self = this;
+  return self.modulesDir().then(function (modulesDir) {
     return utils.copyFiles(self._filesToCopy(modulesDir));
   });
 };
