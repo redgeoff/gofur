@@ -1,3 +1,4 @@
 test:
   post:
+    - npm run assert-beautified
     - npm run node-full-test
