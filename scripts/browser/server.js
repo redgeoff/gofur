@@ -10,7 +10,7 @@ var Server = function () {
 
 Server.prototype._name = 'browser';
 
-Server.prototype._filesToCopy = function () {
+Server.prototype._filesToCopy = function (modulesDir) {
   return [{
       src: path.join(__dirname, 'index.html'),
       dst: path.join(this._htmlDir, 'index.html')
@@ -20,11 +20,11 @@ Server.prototype._filesToCopy = function () {
       dst: path.join(this._htmlDir, 'webrunner.js')
     },
     {
-      src: path.join(__dirname, '../../node_modules/mocha/mocha.css'),
+      src: path.join(modulesDir, 'mocha/mocha.css'),
       dst: path.join(this._htmlDir, 'mocha.css')
     },
     {
-      src: path.join(__dirname, '../../node_modules/mocha/mocha.js'),
+      src: path.join(modulesDir, 'mocha/mocha.js'),
       dst: path.join(this._htmlDir, 'mocha.js')
     }
   ];

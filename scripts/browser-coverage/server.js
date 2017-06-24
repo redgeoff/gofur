@@ -17,21 +17,21 @@ Server.prototype._transform = function () {
   }));
 };
 
-Server.prototype._filesToCopy = function () {
+Server.prototype._filesToCopy = function (modulesDir) {
   return [{
       src: path.join(__dirname, 'index.html'),
       dst: path.join(this._htmlDir, 'index.html')
     },
     {
-      src: path.join(__dirname, '../../node_modules/mocha/mocha.css'),
+      src: path.join(modulesDir, 'mocha/mocha.css'),
       dst: path.join(this._htmlDir, 'mocha.css')
     },
     {
-      src: path.join(__dirname, '../../node_modules/mocha/mocha.js'),
+      src: path.join(modulesDir, 'mocha/mocha.js'),
       dst: path.join(this._htmlDir, 'mocha.js')
     },
     {
-      src: path.join(__dirname, '../../node_modules/chai/chai.js'),
+      src: path.join(modulesDir, 'chai/chai.js'),
       dst: path.join(this._htmlDir, 'chai.js')
     }
   ];

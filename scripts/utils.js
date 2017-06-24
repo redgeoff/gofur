@@ -62,4 +62,18 @@ Utils.prototype.writeFile = function (file, data) {
   return this._writeFile(file, data);
 };
 
+Utils.prototype.fileExists = function (file) {
+  return new Promise(function (resolve, reject) {
+    fs.stat(file, function (err /* stat */ ) {
+      if (err == null) {
+        resolve(true);
+      } else if (err.code === 'ENOENT') {
+        resolve(false);
+      } else {
+        reject(err);
+      }
+    });
+  });
+};
+
 module.exports = new Utils();

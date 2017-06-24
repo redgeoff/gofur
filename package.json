@@ -1,6 +1,6 @@
 {
   "name": "gofur",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Utils for running JS tests in the browser",
   "main": "index.js",
   "repository": {
