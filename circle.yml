@@ -1,5 +1,10 @@
-node:
-  version: 6.9.2
+# Doesn't actually work!
+# node:
+#  version: 6.9.2
+
+dependencies:
+  pre:
+    - nvm install 6.9.2
 
 test:
   post:
