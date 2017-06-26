@@ -6,6 +6,9 @@ dependencies:
   pre:
     - nvm install 6.9.2
 
+  override:
+    - nvm use 6.9.2 && npm install
+
 test:
   post:
     - npm run assert-beautified
