@@ -1,3 +1,6 @@
+node:
+  version: 6.9.2
+
 test:
   post:
     - npm run assert-beautified
