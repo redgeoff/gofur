@@ -13,7 +13,7 @@ If you wish to view the code coverage report then you should also install istanb
     $ npm install istanbul --save-dev
 
 
-# Command line parameters
+## Command line parameters
 
   - -c cache The path to a directory that will be used to store temporary files, including code coverage reports. You should probably make sure that the contents of this directory are ignored with a .gitignore file
   - -t test-file The entry point for your mocha tests
