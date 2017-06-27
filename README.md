@@ -1,5 +1,7 @@
 # gofur
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/redgeoff/gofur.svg)](https://greenkeeper.io/)
+
 Easily run your mocha JS tests in the browser. Gofur allows you to focus on writing tests and not on the details of how to run your tests.
 
 
