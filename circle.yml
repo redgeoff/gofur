@@ -16,4 +16,5 @@ test:
 
   override:
     - nvm use 6.9.2 && npm run node-full-test
+    - nvm use 6.9.2 && npm run browser-test-phantomjs
     - nvm use 6.9.2 && npm run browser-coverage-full-test

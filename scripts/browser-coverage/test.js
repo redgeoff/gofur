@@ -7,7 +7,7 @@ var argv = require('minimist')(process.argv.slice(2)),
   path = require('path');
 
 if (!argv.c || !argv.t) {
-  console.log('Usage: test -c cache-dir -t test-js-file [ -p port ]');
+  console.log('Usage: test -c cache-dir -t test-js-file [ -p port ] [ -g reg-ex ]');
   process.exit(1);
 }
 
@@ -38,9 +38,9 @@ var runTests = function (modulesDir) {
     '-p', path.join(modulesDir, 'phantomjs-prebuilt/bin/phantomjs')
   ];
 
-  if (process.env.GREP) {
+  if (argv.g) {
     options.push('-g');
-    options.push(process.env.GREP);
+    options.push(argv.g);
   }
 
   // Unless we have mocha-phantomjs installed globally we have to specify the full path

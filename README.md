@@ -1,29 +1,75 @@
 # gofur
 
-Utils for running JS tests in the browser
+Easily run your mocha JS tests in the browser. Gofur allows you to focus on writing tests and not on the details of how to run your tests.
 
 
-## Run manually tests in a browser
+## Set up
 
-    $ npm run browser-server
-    Use browser to visit http://127.0.0.1:8001/index.html
+    $ npm install gofur --save-dev
+    $ npm install -g phantomjs-prebuilt # You need phantomjs installed globally
+
+If you wish to view the code coverage report then you should also install istanbul
+
+    $ npm install istanbul --save-dev
+
+
+# Command line parameters
+
+  - -c cache The path to a directory that will be used to store temporary files, including code coverage reports. You should probably make sure that the contents of this directory are ignored with a .gitignore file
+  - -t test-file The entry point for your mocha tests
+  - -p port The port for running the test HTTP server, defaulted to 8001
+  - -b browser A colon-separated list of `(saucelabs|selenium):browserName:browserVerion:platform`
 
 
 ## Run tests in phantomjs and generate code coverage
 
-    $ npm run browser-coverage-full-test
-    TODO: how to check coverage
+    $ node_modules/gofur/scripts/browser-coverage/test.js -c cache -t test/index.js
+    $ node_modules/istanbul/lib/cli.js report --dir cache/coverage/browser --root cache/coverage/browser lcov
+    You can then open coverage/browser/lcov-report/index.html in any browser to view the code coverage report
+
+You can then enforce a certain level of code coverage, e.g.
+
+    $ node_modules/istanbul/lib/cli.js check-coverage --lines 100 --function 100 --statements 100 --branches 100 cache/coverage/browser/coverage.json
+
+You can also filter the tests, e.g.
+
+    $ node_modules/gofur/scripts/browser-coverage/test.js -c cache -t test/index.js -g reg-ex
 
 
-## TODO: should all of the following be in the node-seed repo instead?
+## Manually run tests in a browser
 
-## TODO: Run all local tests
+    $ node_modules/gofur/scripts/browser-coverage/serve.js -c cache -t test/index.js
+    Use any browser to visit http://127.0.0.1:8001/index.html
+    And you can filter the tests, e.g. http://127.0.0.1:8001/index.html?grep=reg-ex
 
-## TODO: Run single node test
 
-## TODO: Run subset of tests and analyze coverage
+## Headlessly run tests in a browser without generating code coverage
 
-## TODO: Debugging Tests Using Node Inspector
+phantomjs:
+
+    $ node_modules/gofur/scripts/browser/test.js -c cache -t test/index.js
+
+You can also filter the tests, e.g.
+
+    $ node_modules/gofur/scripts/browser/test.js -c cache -t test/index.js -g reg-ex
+
+Chrome:
+
+Note: you must have Chrome installed
+
+    $ node_modules/gofur/scripts/browser/test.js -c cache -t test/index.js -b selenium:chrome
+
+Firefox:
+
+Note: you must have Firefox installed
+
+    $ node_modules/gofur/scripts/browser/test.js -c cache -t test/index.js -b selenium:firefox
+
+
+## Example
+
+See [js-seed](https://github.com/redgeoff/js-seed) for a complete working example
+
 
 ## TODO: Run Saucelabs Tests In a Specific Browser
 

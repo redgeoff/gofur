@@ -4,6 +4,7 @@
 // - Refactor code into separate Tester class and then use here
 // - Make sure the sauce labs flow is working
 // - wd and other libs below now support promises so let's use them!
+// - Refactor out use of process.env and use command line parameters instead
 
 'use strict';
 
@@ -17,7 +18,7 @@ var argv = require('minimist')(process.argv.slice(2)),
   Server = require('./server');
 
 if (!argv.c || !argv.t) {
-  console.log('Usage: test -c cache-dir -t test-js-file [ -p port ]');
+  console.log('Usage: test -c cache-dir -t test-js-file [ -p port ] [ -b browser ] [ -g reg-ex ]');
   process.exit(1);
 }
 
@@ -34,9 +35,8 @@ var accessKey = process.env.SAUCE_ACCESS_KEY;
 
 var sauceResultsUpdater = new SauceResultsUpdater(username, accessKey);
 
-// process.env.CLIENT is a colon seperated list of
-// (saucelabs|selenium):browserName:browserVerion:platform
-var clientStr = process.env.CLIENT || 'selenium:phantomjs';
+// argv.b is a colon-separated list of (saucelabs|selenium):browserName:browserVerion:platform
+var clientStr = argv.b || 'selenium:phantomjs';
 var tmp = clientStr.split(':');
 var client = {
   runner: tmp[0] || 'selenium',
@@ -59,8 +59,8 @@ var build = (process.env.TRAVIS_COMMIT ? process.env.TRAVIS_COMMIT : Date.now())
 if (client.runner === 'saucelabs') {
   qs.saucelabs = true;
 }
-if (process.env.GREP) {
-  qs.grep = process.env.GREP;
+if (argv.g) {
+  qs.grep = argv.g;
 }
 
 testURL += '?';

@@ -1,7 +1,7 @@
 {
   "name": "gofur",
   "version": "0.0.4",
-  "description": "Utils for running JS tests in the browser",
+  "description": "Easily run your mocha JS tests in the browser",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -24,9 +24,9 @@
     "node-full-test": "npm run node-test --coverage && istanbul check-coverage --lines 100 --function 100 --statements 100 --branches 100",
     "browser-server": "./scripts/browser/serve.js -c cache -t test/index.js",
     "browser-test": "./scripts/browser/test.js -c cache -t test/index.js",
-    "browser-test-firefox": "CLIENT=selenium:firefox ./scripts/browser/test.js -c cache -t test/index.js",
-    "browser-test-chrome": "CLIENT=selenium:chrome ./scripts/browser/test.js -c cache -t test/index.js",
-    "browser-test-phantomjs": "CLIENT=selenium:phantomjs ./scripts/browser/test.js -c cache -t test/index.js",
+    "browser-test-firefox": "./scripts/browser/test.js -c cache -t test/index.js -b selenium:firefox",
+    "browser-test-chrome": "./scripts/browser/test.js -c cache -t test/index.js -b selenium:chrome ",
+    "browser-test-phantomjs": "./scripts/browser/test.js -c cache -t test/index.js -b selenium:phantomjs",
     "browser-coverage-server": "./scripts/browser-coverage/serve.js -c cache -t test/index.js",
     "browser-coverage-test": "./scripts/browser-coverage/test.js -c cache -t test/index.js",
     "browser-coverage-report": "istanbul report --dir cache/coverage/browser --root cache/coverage/browser lcov",
