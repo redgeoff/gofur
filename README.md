@@ -1,3 +1,5 @@
+[![Circle CI](https://circleci.com/gh/redgeoff/gofur.svg?style=svg&circle-token=c8eb897fffae40e64aefdf37db7984349b851ef5)](https://circleci.com/gh/redgeoff/gofur)
+
 # gofur
 
 Easily run your mocha JS tests in the browser. Gofur allows you to focus on writing tests and not on the details of how to run your tests.
