@@ -57,5 +57,10 @@
   "devDependencies": {
     "beautify-proj": "^1.0.0",
     "jshint": "^2.9.4"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "chai-as-promised"
+    ]
   }
 }
