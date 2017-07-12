@@ -5,6 +5,7 @@
 dependencies:
   pre:
     - nvm install 7.10.0
+    - nvm use 7.10.0 && npm install -g npm
 
   override:
     - nvm use 7.10.0 && npm install
