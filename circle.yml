@@ -1,20 +1,20 @@
 # Doesn't actually work!
 # node:
-#  version: 6.11.1
+#  version: 7.10.0
 
 dependencies:
   pre:
-    - nvm install 6.11.1
+    - nvm install 7.10.0
 
   override:
-    - nvm use 6.11.1 && npm install
+    - nvm use 7.10.0 && npm install
 
 test:
   pre:
-    - nvm use 6.11.1 && npm run assert-beautified
-    - nvm use 6.11.1 && npm run jshint
+    - nvm use 7.10.0 && npm run assert-beautified
+    - nvm use 7.10.0 && npm run jshint
 
   override:
-    - nvm use 6.11.1 && npm run node-full-test
-    - nvm use 6.11.1 && npm run browser-test-phantomjs
-    - nvm use 6.11.1 && npm run browser-coverage-full-test
+    - nvm use 7.10.0 && npm run node-full-test
+    - nvm use 7.10.0 && npm run browser-test-phantomjs
+    - nvm use 7.10.0 && npm run browser-coverage-full-test
