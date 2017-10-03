@@ -43,15 +43,18 @@ Server.prototype._writeConfig = function (config) {
 };
 
 Server.prototype.modulesDir = function () {
-  return utils.fileExists(path.join(__dirname, '../node_modules/mocha')).then(function (exists) {
-    // Is this script being run from another node module? If so, then adjust the path to the
-    // modules
-    if (exists) {
-      return path.join(__dirname, '../node_modules');
-    } else {
-      return path.join(__dirname, '../..');
-    }
-  });
+  return path.join(__dirname, '../..');
+  // The following was needed for mocha < 4
+  //
+  // return utils.fileExists(path.join(__dirname, '../node_modules/mocha')).then(function (exists) {
+  //   // Is this script being run from another node module? If so, then adjust the path to the
+  //   // modules
+  //   if (exists) {
+  //     return path.join(__dirname, '../node_modules');
+  //   } else {
+  //     return path.join(__dirname, '../..');
+  //   }
+  // });
 };
 
 // We need to copy files to the cache so that we can expose a single directory to our web server
