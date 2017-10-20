@@ -179,6 +179,9 @@ function startTest() {
 
       });
     }, 10 * 1000);
+  }).catch(function (err) {
+    console.error(err);
+    process.exit(1);
   });
 }
 
