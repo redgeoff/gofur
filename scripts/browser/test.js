@@ -15,10 +15,11 @@ var querystring = require('querystring');
 var SauceResultsUpdater = require('./sauce-results-updater');
 
 var argv = require('minimist')(process.argv.slice(2)),
-  Server = require('./server');
+  Server = require('./server'),
+  utils = require('../utils');
 
 if (!argv.c || !argv.t) {
-  console.log('Usage: test -c cache-dir -t test-js-file [ -p port ] [ -b browser ] [ -g reg-ex ]');
+  console.log('Usage: test -c cache-dir -t test-js-file [ -p port ] [ -b browser ] [ -g reg-ex ] [ -s script ]');
   process.exit(1);
 }
 
@@ -70,17 +71,17 @@ function testError(e) {
   console.error(e);
   console.error('Doh, tests failed');
   sauceClient.quit();
-  process.exit(3);
+  utils.quit(3);
 }
 
 function postResult(result) {
   var failed = !process.env.PERF && result.failed;
   if (client.runner === 'saucelabs') {
     sauceResultsUpdater.setPassed(jobName, build, !failed).then(function () {
-      process.exit(failed ? 1 : 0);
+      utils.quit(failed ? 1 : 0);
     });
   } else {
-    process.exit(failed ? 1 : 0);
+    utils.quit(failed ? 1 : 0);
   }
 }
 
@@ -105,7 +106,7 @@ function startSelenium(callback) {
   selenium.install(opts, function (err) {
     if (err) {
       console.error('Failed to install selenium');
-      process.exit(1);
+      utils.quit(1);
     }
     selenium.start(opts, function ( /* err, server */ ) {
       sauceClient = wd.promiseChainRemote();
@@ -128,7 +129,7 @@ function startSauceConnect(callback) {
 
       if (++retries > MAX_RETRIES) {
         console.log('Max retries reached, exiting');
-        process.exit(1);
+        utils.quit(1);
       } else {
         console.log('Retry', retries, '...');
         setTimeout(function () {
@@ -181,17 +182,19 @@ function startTest() {
     }, 10 * 1000);
   }).catch(function (err) {
     console.error(err);
-    process.exit(1);
+    utils.quit(1);
   });
 }
 
-server.serve().then(function () {
-  if (client.runner === 'saucelabs') {
-    startSauceConnect(startTest);
-  } else {
-    startSelenium(startTest);
-  }
+utils.startIfScript(argv.s).then(function () {
+  return server.serve().then(function () {
+    if (client.runner === 'saucelabs') {
+      startSauceConnect(startTest);
+    } else {
+      startSelenium(startTest);
+    }
+  });
 }).catch(function (err) {
   console.error(err);
-  process.exit(1);
+  utils.quit(1);
 });

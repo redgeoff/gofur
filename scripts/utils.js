@@ -1,10 +1,12 @@
 'use strict';
 
 var fs = require('fs'),
-  Promise = require('bluebird');
+  Promise = require('sporks/scripts/promise'),
+  scriptRunner = require('./script-runner');
 
 var Utils = function () {
   this._writeFile = Promise.promisify(fs.writeFile);
+  this._script = null;
 };
 
 Utils.prototype.copyFile = function (srcPath, dstPath) {
@@ -73,6 +75,37 @@ Utils.prototype.fileExists = function (file) {
         reject(err);
       }
     });
+  });
+};
+
+Utils.prototype.startIfScript = function (path) {
+  // Wrap so response is a promise
+  var self = this;
+  return Promise.resolve().then(function () {
+    // Run external script?
+    if (path) {
+      self._script = scriptRunner.run(path);
+    }
+  });
+};
+
+Utils.prototype.quit = function (code) {
+  // TODO: refactor as using quit is ugly and can be cleaned up by moving from callbacks to promises
+  var self = this;
+  return Promise.resolve().then(function () {
+    if (self._script) {
+      // Use Promise.resolve() so that we can catch errors from kill() in a promise
+      return Promise.resolve().then(function () {
+        return self._script.child.kill();
+      }).then(function () {
+        return self._script.closed;
+      }).catch(function (err) {
+        // Swallow error as we don't want to prevent the test from stopping
+        console.error('error killing script, err=', err);
+      });
+    }
+  }).then(function () {
+    process.exit(code);
   });
 };
 
