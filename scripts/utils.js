@@ -84,10 +84,6 @@ Utils.prototype.setSeleniumChild = function (child) {
   this._seleniumChild = child;
 };
 
-Utils.prototype.setWebDriver = function (driver) {
-  this._webDriver = driver;
-};
-
 Utils.prototype.startIfScript = function (path) {
   // Wrap so response is a promise
   var self = this;

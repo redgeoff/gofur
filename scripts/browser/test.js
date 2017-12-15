@@ -115,7 +115,6 @@ function startSelenium(callback) {
       }
       sauceClient = wd.promiseChainRemote();
       utils.setSeleniumChild(child);
-      utils.setWebDriver(sauceClient);
       callback();
     });
   });
