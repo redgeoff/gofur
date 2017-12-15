@@ -1,6 +1,6 @@
 'use strict';
 
-var Promise = require('bluebird');
+var Promise = require('sporks/scripts/promise');
 
 var Foo = function () {
   this._thing = 'yar';

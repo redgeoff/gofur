@@ -6,7 +6,7 @@ var path = require('path'),
   browserify = require('browserify'),
   http = require('http'),
   express = require('express'),
-  Promise = require('bluebird');
+  Promise = require('sporks/scripts/promise');
 
 var Server = function (cacheDir, testJsFile, port) {
   this._cacheDir = cacheDir;

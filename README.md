@@ -18,11 +18,17 @@ If you wish to view the code coverage report then you should also install istanb
 
 ## Command line parameters
 
-  - -c cache The path to a directory that will be used to store temporary files, including code coverage reports. You should probably make sure that the contents of this directory are ignored with a .gitignore file
-  - -t test-file The entry point for your mocha tests
-  - -p port The port for running the test HTTP server, defaulted to 8001
-  - -b browser A colon-separated list of `(saucelabs|selenium):browserName:browserVerion:platform`
-
+    -c cache            The path to a directory that will be used to store temporary
+                        files, including code coverage reports. You should probably
+                        make sure that the contents of this directory are ignored
+                        with a .gitignore file
+    -t test-file        The entry point for your mocha tests
+    -p port             The port for running the test HTTP server, defaulted to 8001
+    -b browser          A colon-separated list of
+                        `(saucelabs|selenium):browserName:browserVerion:platform`
+    -s path-to-script   Optional path to a script that will be run before the browser
+                        tests. This script will then be killed after the tests. This
+                        script can be used to set up fixtures.
 
 ## Run tests in phantomjs and generate code coverage
 
