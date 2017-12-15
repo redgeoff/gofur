@@ -1,3 +1,6 @@
 #!/usr/bin/env node
 
-var foo = 'bar';
+'use strict';
+
+var foo;
+foo = 'bar';
