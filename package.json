@@ -1,6 +1,6 @@
 {
   "name": "gofur",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Easily run your mocha JS tests in the browser",
   "main": "index.js",
   "repository": {
