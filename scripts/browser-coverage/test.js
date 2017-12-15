@@ -4,10 +4,14 @@
 
 var argv = require('minimist')(process.argv.slice(2)),
   Server = require('./server'),
-  path = require('path');
+  path = require('path'),
+  utils = require('../utils');
 
 if (!argv.c || !argv.t) {
-  console.log('Usage: test -c cache-dir -t test-js-file [ -p port ] [ -g reg-ex ]');
+  console.log([
+    'Usage: test -c cache-dir -t test-js-file [ -p port ] [ -g reg-ex ]',
+    '[ -s script ]'
+  ].join(' '));
   process.exit(1);
 }
 
@@ -26,6 +30,8 @@ var runTests = function (modulesDir) {
   //   }
   //   childProcess.spawn = mySpawn;
   // })();
+
+  // TODO: use ScriptRunner instead of custom code below
 
   var spawn = require('child_process').spawn;
 
@@ -62,15 +68,17 @@ var runTests = function (modulesDir) {
 
   child.on('close', function (code) {
     console.log('Mocha process exited with code ' + code);
-    process.exit(code > 0 ? 1 : 0);
+    utils.quit(code > 0 ? 1 : 0);
   });
 };
 
-server.serve().then(function () {
+utils.startIfScript(argv.s).then(function () {
+  return server.serve();
+}).then(function () {
   return server.modulesDir();
 }).then(function (modulesDir) {
   runTests(modulesDir);
 }).catch(function (err) {
   console.error(err);
-  process.exit(1);
+  utils.quit(1);
 });

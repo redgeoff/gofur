@@ -28,7 +28,7 @@
     "browser-test-chrome": "./scripts/browser/test.js -c cache -t test/index.js -b selenium:chrome -s test/external-script.js",
     "browser-test-phantomjs": "./scripts/browser/test.js -c cache -t test/index.js -b selenium:phantomjs -s test/external-script.js",
     "browser-coverage-server": "./scripts/browser-coverage/serve.js -c cache -t test/index.js",
-    "browser-coverage-test": "./scripts/browser-coverage/test.js -c cache -t test/index.js",
+    "browser-coverage-test": "./scripts/browser-coverage/test.js -c cache -t test/index.js -s test/external-script.js",
     "browser-coverage-report": "istanbul report --dir cache/coverage/browser --root cache/coverage/browser lcov",
     "browser-coverage-check": "istanbul check-coverage --lines 100 --function 100 --statements 100 --branches 100 cache/coverage/browser/coverage.json",
     "browser-coverage-full-test": "npm run browser-coverage-test && npm run browser-coverage-report && npm run browser-coverage-check",
