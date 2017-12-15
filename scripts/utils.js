@@ -98,12 +98,9 @@ Utils.prototype.startIfScript = function (path) {
 Utils.prototype._killSelenium = function () {
   var self = this;
   return Promise.resolve().then(function () {
-    // Wait for selenium to close phantomjs before killing selenium. TODO: is there a better way?
-    return sporks.timeout(1000);
-  }).then(function () {
     if (self._seleniumChild) {
       var seleniumClosed = sporks.once(self._seleniumChild, 'close');
-      self._seleniumChild.kill();
+      self._seleniumChild.kill('SIGINT');
       return seleniumClosed;
     }
   }).catch(function (err) {
@@ -117,7 +114,7 @@ Utils.prototype._killScript = function () {
   if (self._script) {
     // Use Promise.resolve() so that we can catch errors from kill() in a promise
     return Promise.resolve().then(function () {
-      self._script.child.kill();
+      self._script.child.kill('SIGINT');
       return self._script.closed;
     }).catch(function (err) {
       // Swallow error as we don't want to prevent the test from stopping
