@@ -1,12 +1,7 @@
 'use strict';
 
 var sporks = require('sporks');
-// var config = require('../server-config-safe');
 var spawn = require('child_process').spawn;
-// var utils = require('./utils');
-// var path = require('path');
-// var JSONStream = require('JSONStream');
-// var Promise = require('sporks/scripts/promise');
 
 var ScriptRunner = function () {};
 
@@ -21,7 +16,7 @@ ScriptRunner.prototype._spawn = function (command, opts, ignoreErrors) {
 
     // An error entry? There shouldn't be any errors
     if (!ignoreErrors) {
-      console.error(logEntry);
+      console.error(logEntry + '');
     }
   };
 
@@ -52,7 +47,7 @@ ScriptRunner.prototype._spawn = function (command, opts, ignoreErrors) {
 };
 
 ScriptRunner.prototype.run = function (path, ignoreErrors) {
-  return this._spawn(path, null, ignoreErrors);
+  return this._spawn(path, undefined, ignoreErrors);
 };
 
 module.exports = new ScriptRunner();
