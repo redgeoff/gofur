@@ -35,7 +35,6 @@
     "test": "npm run assert-beautified && npm run jshint && npm run node-full-test && npm run browser-coverage-full-test"
   },
   "dependencies": {
-    "bluebird": "^3.5.0",
     "browserify": "^14.4.0",
     "browserify-istanbul": "^3.0.0",
     "chai": "^4.1.0",
@@ -52,6 +51,7 @@
     "sauce-connect-launcher": "^1.2.2",
     "saucelabs": "^1.4.0",
     "selenium-standalone": "6.12.0",
+    "sporks": "^1.0.0",
     "wd": "^1.2.0"
   },
   "devDependencies": {

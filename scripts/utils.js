@@ -2,11 +2,13 @@
 
 var fs = require('fs'),
   Promise = require('sporks/scripts/promise'),
-  scriptRunner = require('./script-runner');
+  scriptRunner = require('./script-runner'),
+  sporks = require('sporks');
 
 var Utils = function () {
   this._writeFile = Promise.promisify(fs.writeFile);
   this._script = null;
+  this._seleniumChild = null;
 };
 
 Utils.prototype.copyFile = function (srcPath, dstPath) {
@@ -78,6 +80,14 @@ Utils.prototype.fileExists = function (file) {
   });
 };
 
+Utils.prototype.setSeleniumChild = function (child) {
+  this._seleniumChild = child;
+};
+
+Utils.prototype.setWebDriver = function (driver) {
+  this._webDriver = driver;
+};
+
 Utils.prototype.startIfScript = function (path) {
   // Wrap so response is a promise
   var self = this;
@@ -89,21 +99,44 @@ Utils.prototype.startIfScript = function (path) {
   });
 };
 
+Utils.prototype._killSelenium = function () {
+  var self = this;
+  return Promise.resolve().then(function () {
+    // Wait for selenium to close phantomjs before killing selenium. TODO: is there a better way?
+    return sporks.timeout(1000);
+  }).then(function () {
+    if (self._seleniumChild) {
+      var seleniumClosed = sporks.once(self._seleniumChild, 'close');
+      self._seleniumChild.kill();
+      return seleniumClosed;
+    }
+  }).catch(function (err) {
+    // Swallow error as we don't want to prevent the test from stopping
+    console.error('error killing selenium, err=', err);
+  });
+};
+
+Utils.prototype._killScript = function () {
+  var self = this;
+  if (self._script) {
+    // Use Promise.resolve() so that we can catch errors from kill() in a promise
+    return Promise.resolve().then(function () {
+      self._script.child.kill();
+      return self._script.closed;
+    }).catch(function (err) {
+      // Swallow error as we don't want to prevent the test from stopping
+      console.error('error killing script, err=', err);
+    });
+  }
+};
+
 Utils.prototype.quit = function (code) {
   // TODO: refactor as using quit is ugly and can be cleaned up by moving from callbacks to promises
   var self = this;
   return Promise.resolve().then(function () {
-    if (self._script) {
-      // Use Promise.resolve() so that we can catch errors from kill() in a promise
-      return Promise.resolve().then(function () {
-        return self._script.child.kill();
-      }).then(function () {
-        return self._script.closed;
-      }).catch(function (err) {
-        // Swallow error as we don't want to prevent the test from stopping
-        console.error('error killing script, err=', err);
-      });
-    }
+    return self._killScript();
+  }).then(function () {
+    return self._killSelenium();
   }).then(function () {
     process.exit(code);
   });

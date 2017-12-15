@@ -5,7 +5,7 @@
 
 var request = require('request'),
   SauceLabs = require('saucelabs'),
-  Promise = require('bluebird');
+  Promise = require('sporks/scripts/promise');
 
 var Sauce = function (username, accessKey) {
   this._username = username;

@@ -70,8 +70,9 @@ testURL += querystring.stringify(qs);
 function testError(e) {
   console.error(e);
   console.error('Doh, tests failed');
-  sauceClient.quit();
-  utils.quit(3);
+  sauceClient.quit().then(function () {
+    utils.quit(3);
+  });
 }
 
 function postResult(result) {
@@ -100,7 +101,6 @@ function testComplete(result) {
 function startSelenium(callback) {
   // Start selenium
   var opts = {
-    // TODO: remove?
     // version: '2.45.0'
   };
   selenium.install(opts, function (err) {
@@ -108,8 +108,14 @@ function startSelenium(callback) {
       console.error('Failed to install selenium');
       utils.quit(1);
     }
-    selenium.start(opts, function ( /* err, server */ ) {
+    selenium.start(opts, function (err, child) {
+      if (err) {
+        console.error('Failed to start selenium');
+        utils.quit(1);
+      }
       sauceClient = wd.promiseChainRemote();
+      utils.setSeleniumChild(child);
+      utils.setWebDriver(sauceClient);
       callback();
     });
   });
