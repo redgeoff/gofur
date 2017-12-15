@@ -19,7 +19,10 @@ var argv = require('minimist')(process.argv.slice(2)),
   utils = require('../utils');
 
 if (!argv.c || !argv.t) {
-  console.log('Usage: test -c cache-dir -t test-js-file [ -p port ] [ -b browser ] [ -g reg-ex ] [ -s script ]');
+  console.log([
+    'Usage: test -c cache-dir -t test-js-file [ -p port ] [ -b browser ] [ -g reg-ex ]',
+    '[ -s script ]'
+  ].join(' '));
   process.exit(1);
 }
 
