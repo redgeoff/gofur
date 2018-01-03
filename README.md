@@ -85,3 +85,7 @@ See [js-seed](https://github.com/redgeoff/js-seed) for a complete working exampl
 ## Notes
 
 As per https://github.com/domenic/chai-as-promised/releases/tag/v7.0.0, chai-as-promised 7 isn't supported by PhantomJS 2.1.14. Hopefully a later version of PhantomJS will support it or we'll need to transpile chais-as-promised
+
+## Misc
+
+A hacky way to debug the browser tests is to use print statements in the form `window.results.failures.push({ title: 'my msg' });`
