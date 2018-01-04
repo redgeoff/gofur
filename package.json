@@ -35,7 +35,7 @@
     "test": "npm run assert-beautified && npm run jshint && npm run node-full-test && npm run browser-coverage-full-test"
   },
   "dependencies": {
-    "browserify": "^14.4.0",
+    "browserify": "^15.0.0",
     "browserify-istanbul": "^3.0.0",
     "chai": "^4.1.0",
     "chai-as-promised": "6.0.0",
