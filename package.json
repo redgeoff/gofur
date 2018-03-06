@@ -32,31 +32,32 @@
     "browser-coverage-report": "istanbul report --dir cache/coverage/browser --root cache/coverage/browser lcov",
     "browser-coverage-check": "istanbul check-coverage --lines 100 --function 100 --statements 100 --branches 100 cache/coverage/browser/coverage.json",
     "browser-coverage-full-test": "npm run browser-coverage-test && npm run browser-coverage-report && npm run browser-coverage-check",
-    "test": "npm run assert-beautified && npm run jshint && npm run node-full-test && npm run browser-coverage-full-test"
+    "clear-cache": "rm -rf cache/coverage && rm -rf cache/browser-coverage && rm -rf cache/browser",
+    "test": "npm run assert-beautified && npm run jshint && npm run clear-cache && npm run node-full-test && npm run browser-coverage-full-test"
   },
   "dependencies": {
-    "browserify": "^16.0.0",
-    "browserify-istanbul": "^3.0.0",
-    "chai": "^4.1.0",
+    "browserify": "^16.1.0",
+    "browserify-istanbul": "^3.0.1",
+    "chai": "^4.1.2",
     "chai-as-promised": "6.0.0",
-    "express": "^4.15.3",
+    "express": "^4.16.2",
     "inherits": "^2.0.3",
     "istanbul": "^0.4.5",
     "minimist": "^1.2.0",
     "mkdirp-promise": "^5.0.1",
     "mocha": "^5.0.2",
     "mocha-phantomjs": "^4.1.0",
-    "phantomjs-prebuilt": "^2.1.14",
-    "request": "^2.81.0",
-    "sauce-connect-launcher": "^1.2.2",
+    "phantomjs-prebuilt": "^2.1.16",
+    "request": "^2.83.0",
+    "sauce-connect-launcher": "^1.2.3",
     "saucelabs": "^1.4.0",
-    "selenium-standalone": "6.12.0",
+    "selenium-standalone": "^6.12.0",
     "sporks": "^1.0.0",
-    "wd": "^1.2.0"
+    "wd": "^1.6.0"
   },
   "devDependencies": {
     "beautify-proj": "^1.0.0",
-    "jshint": "^2.9.4"
+    "jshint": "^2.9.5"
   },
   "greenkeeper": {
     "ignore": [
