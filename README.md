@@ -9,7 +9,6 @@ Easily run your mocha JS tests in the browser. Gofur allows you to focus on writ
 ## Set up
 
     $ npm install gofur --save-dev
-    $ npm install -g phantomjs-prebuilt # You need phantomjs installed globally
 
 If you wish to view the code coverage report then you should also install istanbul
 
