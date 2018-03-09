@@ -6,6 +6,11 @@ jobs:
       - image: circleci/node:8.1.4
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - projectname-npm-deps-{{ .Branch }}-{{ checksum "package.json" }}
+            - projectname-npm-deps-{{ .Branch }}
+            - projectname-npm-deps-
       - run: npm install
       - run: npm run assert-beautified
       - run: npm run jshint
