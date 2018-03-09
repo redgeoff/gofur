@@ -4,6 +4,7 @@ jobs:
   build:
     docker:
       - image: circleci/node:8.1.4-browsers
+      - image: selenium/standalone-chrome:latest
     steps:
       - checkout
       - restore_cache:
