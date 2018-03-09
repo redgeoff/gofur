@@ -39,7 +39,8 @@ var accessKey = process.env.SAUCE_ACCESS_KEY;
 
 var sauceResultsUpdater = new SauceResultsUpdater(username, accessKey);
 
-// argv.b is a colon-separated list of (saucelabs|selenium):browserName:browserVerion:platform:headless
+// argv.b is a colon-separated list of
+//   (saucelabs|selenium):browserName:browserVerion:platform:headless
 var clientStr = argv.b || 'selenium:chrome:::headless';
 var tmp = clientStr.split(':');
 var client = {
@@ -171,7 +172,9 @@ function startTest() {
   };
 
   if (client.browser === 'chrome' && client.headless) {
-    opts.chromeOptions = {args: ['--headless']};
+    opts.chromeOptions = {
+      args: ['--headless']
+    };
   }
 
   sauceClient.init(opts).get(testURL).then(function () {
