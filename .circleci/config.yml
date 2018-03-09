@@ -6,6 +6,7 @@ jobs:
       - image: circleci/node:8.1.4
     steps:
       - checkout
+      - run: npm install
       - run: npm run assert-beautified
       - run: npm run npm run jshint
       - run: npm run node-full-test
