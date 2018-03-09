@@ -51,9 +51,9 @@ You can also filter the tests, e.g.
     And you can filter the tests, e.g. http://127.0.0.1:8001/index.html?grep=reg-ex
 
 
-## Headlessly run tests in a browser without generating code coverage
+## Run tests in a browser without generating code coverage
 
-phantomjs:
+Headless with Chrome (you must have Chrome installed):
 
     $ node_modules/gofur/scripts/browser/test.js -c cache -t test/index.js
 
@@ -62,8 +62,6 @@ You can also filter the tests, e.g.
     $ node_modules/gofur/scripts/browser/test.js -c cache -t test/index.js -g reg-ex
 
 Chrome:
-
-Note: you must have Chrome installed
 
     $ node_modules/gofur/scripts/browser/test.js -c cache -t test/index.js -b selenium:chrome
 
