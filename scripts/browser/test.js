@@ -39,14 +39,15 @@ var accessKey = process.env.SAUCE_ACCESS_KEY;
 
 var sauceResultsUpdater = new SauceResultsUpdater(username, accessKey);
 
-// argv.b is a colon-separated list of (saucelabs|selenium):browserName:browserVerion:platform
-var clientStr = argv.b || 'selenium:phantomjs';
+// argv.b is a colon-separated list of (saucelabs|selenium):browserName:browserVerion:platform:headless
+var clientStr = argv.b || 'selenium:chrome:::headless';
 var tmp = clientStr.split(':');
 var client = {
   runner: tmp[0] || 'selenium',
-  browser: tmp[1] || 'phantomjs',
+  browser: tmp[1] || 'chrome',
   version: tmp[2] || null, // Latest
-  platform: tmp[3] || null
+  platform: tmp[3] || null,
+  headless: tmp[4] || true
 };
 
 var testURL = 'http://127.0.0.1:' + server._port + '/browser/index.html';
@@ -168,6 +169,10 @@ function startTest() {
     'idle-timeout': 599,
     'tunnel-identifier': tunnelId
   };
+
+  if (client.browser === 'chrome' && client.headless) {
+    opts.chromeOptions = {args: ['--headless']};
+  }
 
   sauceClient.init(opts).get(testURL).then(function () {
 

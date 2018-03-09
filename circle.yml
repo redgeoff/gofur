@@ -21,5 +21,5 @@ test:
 
   override:
     - nvm use $NODE_VERSION && npm run node-full-test
-    - nvm use $NODE_VERSION && npm run browser-test-phantomjs
+    - nvm use $NODE_VERSION && npm run browser-test
     - nvm use $NODE_VERSION && npm run browser-coverage-full-test
