@@ -1,0 +1,13 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: circleci/node:8.1.4
+    steps:
+      - checkout
+      - run: npm run assert-beautified
+      - run: npm run npm run jshint
+      - run: npm run node-full-test
+      # - run: npm run browser-test
+      - run: npm run browser-coverage-full-test
