@@ -36,11 +36,11 @@ Server.prototype._concat = function () {
   return utils.concat(this._b, this._dotFile, this._outFile);
 };
 
-Server.prototype._writeConfig = function (config) {
-  // Provide the location of the cacheDir to phantom-hooks. TODO: is there a cleaner way?
-  return utils.writeFile(path.join(this._htmlDir, 'config.js'), 'window.gofurConfig=' +
-    JSON.stringify(config));
-};
+// Server.prototype._writeConfig = function (config) {
+//   // Provide the location of the cacheDir to the browser. TODO: is there a cleaner way?
+//   return utils.writeFile(path.join(this._htmlDir, 'config.js'), 'window.gofurConfig=' +
+//     JSON.stringify(config));
+// };
 
 Server.prototype.modulesDir = function () {
   return utils.fileExists(path.join(__dirname, '../node_modules/chai')).then(function (exists) {
@@ -88,10 +88,10 @@ Server.prototype.serve = function () {
 
   return self._createHTMLDir().then(function () {
     return self._copyFiles();
-  }).then(function () {
-    return self._writeConfig({
-      cacheDir: self._cacheDir
-    });
+    // }).then(function () {
+    //   return self._writeConfig({
+    //     cacheDir: self._cacheDir
+    //   });
   }).then(function () {
     return self._concat();
   }).then(function () {
