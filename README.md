@@ -29,7 +29,9 @@ If you wish to view the code coverage report then you should also install istanb
                         tests. This script will then be killed after the tests. This
                         script can be used to set up fixtures.
 
-## Run tests in phantomjs and generate code coverage
+## Run tests in headless browser and generate code coverage
+
+Note: you must have Chrome installed
 
     $ node_modules/gofur/scripts/browser-coverage/test.js -c cache -t test/index.js
     $ node_modules/istanbul/lib/cli.js report --dir cache/coverage/browser --root cache/coverage/browser lcov

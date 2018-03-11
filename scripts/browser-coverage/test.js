@@ -2,10 +2,13 @@
 
 'use strict';
 
-var argv = require('minimist')(process.argv.slice(2)),
-  Server = require('./server'),
-  path = require('path'),
-  utils = require('../utils');
+var argv = require('minimist')(process.argv.slice(2));
+var Server = require('./server');
+var path = require('path');
+var utils = require('../utils');
+var runner = require('mocha-headless-chrome');
+var fs = require('fs-extra');
+var path = require('path');
 
 if (!argv.c || !argv.t) {
   console.log([
@@ -17,67 +20,33 @@ if (!argv.c || !argv.t) {
 
 var server = new Server(argv.c, argv.t, argv.p);
 
-var runTests = function (modulesDir) {
-  // // Uncomment for debugging
-  // (function() {
-  //   var childProcess = require('child_process');
-  //   var oldSpawn = childProcess.spawn;
-  //   function mySpawn() {
-  //     console.log('spawn called');
-  //     console.log(arguments);
-  //     var result = oldSpawn.apply(this, arguments);
-  //     return result;
-  //   }
-  //   childProcess.spawn = mySpawn;
-  // })();
+var cacheDir = argv.c;
 
-  // TODO: use ScriptRunner instead of custom code below
-
-  var spawn = require('child_process').spawn;
-
-  var options = [
-    'http://127.0.0.1:' + server._port + '/browser-coverage/index.html',
-    '--timeout', '25000',
-    '--hooks', path.join(__dirname, 'phantom-hooks.js'),
-
-    // Use a more recent version of phantomjs than that packaged with mocha-phantomjs
-    '-p', path.join(modulesDir, 'phantomjs-prebuilt/bin/phantomjs')
-  ];
-
-  if (argv.g) {
-    options.push('-g');
-    options.push(argv.g);
-  }
-
-  // Unless we have mocha-phantomjs installed globally we have to specify the full path
-  // var child = spawn('mocha-phantomjs', options);
-  var child = spawn(path.join(modulesDir, 'mocha-phantomjs/bin/mocha-phantomjs'),
-    options);
-
-  child.stdout.on('data', function (data) {
-    console.log(data.toString()); // echo output, including what could be errors
+var runTests = function () {
+  return runner({
+    file: 'http://127.0.0.1:' + server._port + '/browser-coverage/index.html',
+    timeout: 25000
   });
+};
 
-  child.stderr.on('data', function (data) {
-    console.error(data.toString());
-  });
-
-  child.on('error', function (err) {
-    console.error(err);
-  });
-
-  child.on('close', function (code) {
-    console.log('Mocha process exited with code ' + code);
-    utils.quit(code > 0 ? 1 : 0);
+var saveCoverage = function (coverage) {
+  var dir = path.join(cacheDir, 'coverage/browser');
+  var file = path.join(dir, 'coverage.json');
+  return fs.ensureDir(dir).then(function () {
+    console.log('Writing coverage to ' + file);
+    return fs.writeFile(file, JSON.stringify(coverage));
   });
 };
 
 utils.startIfScript(argv.s).then(function () {
   return server.serve();
 }).then(function () {
-  return server.modulesDir();
-}).then(function (modulesDir) {
-  runTests(modulesDir);
+  return runTests();
+}).then(function (result) {
+  return saveCoverage(result.coverage);
+}).then(function () {
+  // It appears that a bug in MochaHeadlessChrome leaves events running so we have to force an exit
+  utils.quit(0);
 }).catch(function (err) {
   console.error(err);
   utils.quit(1);
