@@ -24,12 +24,13 @@ var server = new Server(argv.c, argv.t, argv.p);
 var cacheDir = argv.c;
 
 var runTests = function (grep) {
-  let qs = {};
+  var qs = {};
   if (grep) {
     qs.grep = grep;
   }
   return runner({
-    file: 'http://127.0.0.1:' + server._port + '/browser-coverage/index.html?' + querystring.stringify(qs),
+    file: 'http://127.0.0.1:' + server._port + '/browser-coverage/index.html?' +
+      querystring.stringify(qs),
     timeout: 180000
   });
 };
