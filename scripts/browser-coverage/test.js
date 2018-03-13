@@ -9,6 +9,7 @@ var utils = require('../utils');
 var runner = require('mocha-headless-chrome');
 var fs = require('fs-extra');
 var path = require('path');
+var querystring = require('querystring');
 
 if (!argv.c || !argv.t) {
   console.log([
@@ -22,9 +23,14 @@ var server = new Server(argv.c, argv.t, argv.p);
 
 var cacheDir = argv.c;
 
-var runTests = function () {
+var runTests = function (grep) {
+  var qs = {};
+  if (grep) {
+    qs.grep = grep;
+  }
   return runner({
-    file: 'http://127.0.0.1:' + server._port + '/browser-coverage/index.html',
+    file: 'http://127.0.0.1:' + server._port + '/browser-coverage/index.html?' +
+      querystring.stringify(qs),
     timeout: 180000
   });
 };
@@ -41,7 +47,7 @@ var saveCoverage = function (coverage) {
 utils.startIfScript(argv.s).then(function () {
   return server.serve();
 }).then(function () {
-  return runTests();
+  return runTests(argv.g);
 }).then(function (result) {
   return saveCoverage(result.coverage);
 }).then(function () {
