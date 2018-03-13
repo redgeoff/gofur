@@ -25,7 +25,7 @@ var cacheDir = argv.c;
 var runTests = function () {
   return runner({
     file: 'http://127.0.0.1:' + server._port + '/browser-coverage/index.html',
-    timeout: 25000
+    timeout: 180000
   });
 };
 
