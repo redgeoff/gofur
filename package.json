@@ -45,7 +45,7 @@
     "istanbul": "^0.4.5",
     "minimist": "^1.2.0",
     "mkdirp-promise": "^5.0.1",
-    "mocha": "^5.2.0",
+    "mocha": "^6.0.0",
     "mocha-headless-chrome": "^2.0.1",
     "request": "^2.88.0",
     "sauce-connect-launcher": "^1.2.4",
